@@ -2343,12 +2343,16 @@ bool CPlayer::IsAuthorized()
 }
 
 bool CPlayer::IsAuthStringValidated()
-{     
+{ 
+
 #if SOURCE_ENGINE >= SE_ORANGEBOX
-	if (!IsFakeClient() && g_Players.m_bAuthstringValidation && !g_HL2.IsLANServer())
-	{
-		return engine->IsClientFullyAuthenticated(m_pEdict);
+	if (!g_HL2.GetValveCommandLine()->HasParm("-xlsp")) { // xbox client arent gonna auth like ever
+		if (!IsFakeClient() && g_Players.m_bAuthstringValidation && !g_HL2.IsLANServer())
+		{
+			return engine->IsClientFullyAuthenticated(m_pEdict);
+		}
 	}
+
 #endif
 
 	return true;
@@ -2431,7 +2435,7 @@ void CPlayer::Kick(const char *str)
 	}
 	else
 	{
-#if SOURCE_ENGINE == SE_CSGO || SOURCE_ENGINE == SE_BLADE || SOURCE_ENGINE == SE_MCV
+#if SOURCE_ENGINE == SE_BLADE || SOURCE_ENGINE == SE_MCV
 		pClient->Disconnect(str);
 #else
 		pClient->Disconnect("%s", str);

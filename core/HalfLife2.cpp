@@ -566,7 +566,7 @@ bool CHalfLife2::TextMsg(int client, int dest, const char *msg)
 			char buffer[253];
 			ke::SafeSprintf(buffer, sizeof(buffer), "%s\1\n", msg);
 
-#if SOURCE_ENGINE == SE_CSGO || SOURCE_ENGINE == SE_BLADE || SOURCE_ENGINE == SE_MCV
+#if SOURCE_ENGINE == SE_BLADE || SOURCE_ENGINE == SE_MCV
 			CCSUsrMsg_SayText *pMsg;
 			if ((pMsg = (CCSUsrMsg_SayText *)g_UserMsgs.StartProtobufMessage(m_SayTextMsg, players, 1, USERMSG_RELIABLE)) == NULL)
 			{
@@ -593,7 +593,7 @@ bool CHalfLife2::TextMsg(int client, int dest, const char *msg)
 		}
 	}
 
-#if SOURCE_ENGINE == SE_CSGO || SOURCE_ENGINE == SE_BLADE || SOURCE_ENGINE == SE_MCV
+#if SOURCE_ENGINE == SE_BLADE || SOURCE_ENGINE == SE_MCV
 	CCSUsrMsg_TextMsg *pMsg;
 	if ((pMsg = (CCSUsrMsg_TextMsg *)g_UserMsgs.StartProtobufMessage(m_MsgTextMsg, players, 1, USERMSG_RELIABLE)) == NULL)
 	{
@@ -630,7 +630,7 @@ bool CHalfLife2::HintTextMsg(int client, const char *msg)
 {
 	cell_t players[] = {client};
 
-#if SOURCE_ENGINE == SE_CSGO || SOURCE_ENGINE == SE_BLADE || SOURCE_ENGINE == SE_MCV
+#if SOURCE_ENGINE == SE_BLADE || SOURCE_ENGINE == SE_MCV
 	CCSUsrMsg_HintText *pMsg;
 	if ((pMsg = (CCSUsrMsg_HintText *)g_UserMsgs.StartProtobufMessage(m_HinTextMsg, players, 1, USERMSG_RELIABLE)) == NULL)
 	{
@@ -660,7 +660,7 @@ bool CHalfLife2::HintTextMsg(int client, const char *msg)
 
 bool CHalfLife2::HintTextMsg(cell_t *players, int count, const char *msg)
 {
-#if SOURCE_ENGINE == SE_CSGO || SOURCE_ENGINE == SE_BLADE || SOURCE_ENGINE == SE_MCV
+#if SOURCE_ENGINE == SE_BLADE || SOURCE_ENGINE == SE_MCV
 	CCSUsrMsg_HintText *pMsg;
 	if ((pMsg = (CCSUsrMsg_HintText *)g_UserMsgs.StartProtobufMessage(m_HinTextMsg, players, count, USERMSG_RELIABLE)) == NULL)
 	{
@@ -695,7 +695,7 @@ bool CHalfLife2::ShowVGUIMenu(int client, const char *name, KeyValues *data, boo
 	int count = 0;
 	cell_t players[] = {client};
 
-#if SOURCE_ENGINE == SE_CSGO || SOURCE_ENGINE == SE_BLADE || SOURCE_ENGINE == SE_MCV
+#if SOURCE_ENGINE == SE_BLADE || SOURCE_ENGINE == SE_MCV
 	CCSUsrMsg_VGUIMenu *pMsg;
 	if ((pMsg = (CCSUsrMsg_VGUIMenu *)g_UserMsgs.StartProtobufMessage(m_VGUIMenu, players, 1, USERMSG_RELIABLE)) == NULL)
 	{
@@ -720,7 +720,7 @@ bool CHalfLife2::ShowVGUIMenu(int client, const char *name, KeyValues *data, boo
 		SubKey = data->GetFirstSubKey();
 	}
 
-#if SOURCE_ENGINE == SE_CSGO || SOURCE_ENGINE == SE_BLADE || SOURCE_ENGINE == SE_MCV
+#if SOURCE_ENGINE == SE_BLADE || SOURCE_ENGINE == SE_MCV
 	pMsg->set_name(name);
 	pMsg->set_show(show);
 

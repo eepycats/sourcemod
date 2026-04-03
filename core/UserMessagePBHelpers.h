@@ -35,6 +35,9 @@
 #include <sh_list.h>
 #include <google/protobuf/descriptor.h>
 #include <amtl/am-string.h>
+#include <google/protobuf/message.h>
+
+using namespace google;
 
 #define GETCHECK_FIELD() \
 	const protobuf::FieldDescriptor *field = msg->GetDescriptor()->FindFieldByName(pszFieldName); \

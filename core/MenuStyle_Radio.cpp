@@ -43,9 +43,7 @@
 #include <google/protobuf/descriptor.h>
 #endif
 
-#if SOURCE_ENGINE == SE_CSGO
-#include <game/shared/csgo/protobuf/cstrike15_usermessages.pb.h>
-#elif SOURCE_ENGINE == SE_BLADE
+#if SOURCE_ENGINE == SE_BLADE
 #include <game/shared/berimbau/protobuf/berimbau_usermessages.pb.h>
 #elif SOURCE_ENGINE == SE_MCV
 #include <game/shared/vietnam/protobuf/vietnam_usermessages.pb.h>
@@ -184,7 +182,7 @@ void CRadioStyle::OnUserMessage(int msg_id, bf_write *bf, IRecipientFilter *pFil
 {
 	int count = pFilter->GetRecipientCount();
 
-#if SOURCE_ENGINE == SE_CSGO || SOURCE_ENGINE == SE_BLADE || SOURCE_ENGINE == SE_MCV
+#if SOURCE_ENGINE == SE_BLADE || SOURCE_ENGINE == SE_MCV
 	int c = ((CCSUsrMsg_ShowMenu &)msg).display_time();
 #else
 	bf_read br(bf->GetBasePointer(), 3);
@@ -502,7 +500,7 @@ void CRadioMenuPlayer::Radio_Refresh()
 		time = menuHoldTime - (unsigned int)(gpGlobals->curtime - menuStartTime);
 	}
 
-#if SOURCE_ENGINE == SE_CSGO || SOURCE_ENGINE == SE_BLADE || SOURCE_ENGINE == SE_MCV
+#if SOURCE_ENGINE == SE_BLADE || SOURCE_ENGINE == SE_MCV
 	// TODO: find what happens past 240 on CS:GO
 	CCSUsrMsg_ShowMenu *msg = (CCSUsrMsg_ShowMenu *)g_UserMsgs.StartProtobufMessage(g_ShowMenuId, players, 1, USERMSG_BLOCKHOOKS);
 	if (!msg)

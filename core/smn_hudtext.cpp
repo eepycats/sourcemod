@@ -323,7 +323,7 @@ void UTIL_SendHudText(int client, const hud_text_parms &textparms, const char *p
 
 	players[0] = client;
 
-#if SOURCE_ENGINE == SE_CSGO || SOURCE_ENGINE == SE_BLADE || SOURCE_ENGINE == SE_MCV
+#if SOURCE_ENGINE == SE_BLADE || SOURCE_ENGINE == SE_MCV
 	CCSUsrMsg_HudMsg *msg = (CCSUsrMsg_HudMsg *)g_UserMsgs.StartProtobufMessage(g_HudMsgNum, players, 1, 0);
 	if (!msg)
 	{
@@ -382,7 +382,7 @@ static cell_t ShowSyncHudText(IPluginContext *pContext, const cell_t *params)
 	Handle_t err;
 	CPlayer *pPlayer;
 	hud_syncobj_t *obj;
-#if SOURCE_ENGINE == SE_CSGO || SOURCE_ENGINE == SE_BLADE || SOURCE_ENGINE == SE_MCV
+#if SOURCE_ENGINE == SE_BLADE || SOURCE_ENGINE == SE_MCV
 	char message_buffer[512];
 #else
 	char message_buffer[255-36];
@@ -471,7 +471,7 @@ static cell_t ShowHudText(IPluginContext *pContext, const cell_t *params)
 {
 	int client;
 	CPlayer *pPlayer;
-#if SOURCE_ENGINE == SE_CSGO || SOURCE_ENGINE == SE_BLADE || SOURCE_ENGINE == SE_MCV
+#if SOURCE_ENGINE == SE_BLADE || SOURCE_ENGINE == SE_MCV
 	char message_buffer[512];
 #else
 	char message_buffer[255-36];

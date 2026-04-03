@@ -33,9 +33,8 @@
 #include "sm_stringutil.h"
 #include "logic_bridge.h"
 
-#if SOURCE_ENGINE == SE_CSGO
-#include <cstrike15_usermessage_helpers.h>
-#elif SOURCE_ENGINE == SE_BLADE
+
+#if SOURCE_ENGINE == SE_BLADE
 #include <berimbau_usermessage_helpers.h>
 #elif SOURCE_ENGINE == SE_MCV
 #include <vietnam_usermessage_helpers.h>
@@ -43,8 +42,7 @@
 #include <amtl/am-string.h>
 
 UserMessages g_UserMsgs;
-
-#if SOURCE_ENGINE == SE_CSGO || SOURCE_ENGINE == SE_BLADE || SOURCE_ENGINE == SE_MCV
+#if SOURCE_ENGINE == SE_BLADE || SOURCE_ENGINE == SE_MCV
 SH_DECL_HOOK3_void(IVEngineServer, SendUserMessage, SH_NOATTRIB, 0, IRecipientFilter &, int, const protobuf::Message &);
 #else
 #if SOURCE_ENGINE >= SE_LEFT4DEAD
@@ -97,7 +95,7 @@ void UserMessages::OnSourceModAllShutdown()
 {
 	if (m_HookCount)
 	{
-#if SOURCE_ENGINE == SE_CSGO || SOURCE_ENGINE == SE_BLADE || SOURCE_ENGINE == SE_MCV
+#if SOURCE_ENGINE == SE_BLADE || SOURCE_ENGINE == SE_MCV
 		SH_REMOVE_HOOK(IVEngineServer, SendUserMessage, engine, SH_MEMBER(this, &UserMessages::OnSendUserMessage_Pre), false);
 		SH_REMOVE_HOOK(IVEngineServer, SendUserMessage, engine, SH_MEMBER(this, &UserMessages::OnSendUserMessage_Post), true);
 #else
@@ -112,10 +110,7 @@ void UserMessages::OnSourceModAllShutdown()
 
 int UserMessages::GetMessageIndex(const char *msg)
 {
-#if SOURCE_ENGINE == SE_CSGO
-	// Can split this per engine and/or game later
-	return g_Cstrike15UsermessageHelpers.GetIndex(msg);
-#elif SOURCE_ENGINE == SE_BLADE
+#if SOURCE_ENGINE == SE_BLADE
 	return g_BerimbauUsermessageHelpers.GetIndex(msg);
 #elif SOURCE_ENGINE == SE_MCV
 	return g_VietnamUsermessageHelpers.GetIndex(msg);
@@ -309,7 +304,7 @@ bool UserMessages::EndMessage()
 		return false;
 	}
 
-#if SOURCE_ENGINE == SE_CSGO || SOURCE_ENGINE == SE_BLADE || SOURCE_ENGINE == SE_MCV
+#if SOURCE_ENGINE == SE_BLADE || SOURCE_ENGINE == SE_MCV
 	if (m_CurFlags & USERMSG_BLOCKHOOKS)
 	{
 		ENGINE_CALL(SendUserMessage)(static_cast<IRecipientFilter &>(m_CellRecFilter), m_CurId, *m_FakeEngineBuffer);
@@ -339,7 +334,7 @@ bool UserMessages::EndMessage()
 	} else {
 		engine->MessageEnd();
 	}
-#endif // SE_CSGO || SE_BLADE || SE_MCV
+#endif // SE_BLADE || SE_MCV
 
 	m_InExec = false;
 	m_CurFlags = 0;
@@ -424,7 +419,7 @@ bool UserMessages::InternalHook(int msg_id, IBitBufUserMessageListener *pListene
 
 	if (!m_HookCount++)
 	{
-#if SOURCE_ENGINE == SE_CSGO || SOURCE_ENGINE == SE_BLADE || SOURCE_ENGINE == SE_MCV
+#if SOURCE_ENGINE == SE_BLADE || SOURCE_ENGINE == SE_MCV
 		SH_ADD_HOOK(IVEngineServer, SendUserMessage, engine, SH_MEMBER(this, &UserMessages::OnSendUserMessage_Pre), false);
 		SH_ADD_HOOK(IVEngineServer, SendUserMessage, engine, SH_MEMBER(this, &UserMessages::OnSendUserMessage_Post), true);
 #else
@@ -503,7 +498,7 @@ void UserMessages::_DecRefCounter()
 {
 	if (--m_HookCount == 0)
 	{
-#if SOURCE_ENGINE == SE_CSGO || SOURCE_ENGINE == SE_BLADE || SOURCE_ENGINE == SE_MCV
+#if SOURCE_ENGINE == SE_BLADE || SOURCE_ENGINE == SE_MCV
 		SH_REMOVE_HOOK(IVEngineServer, SendUserMessage, engine, SH_MEMBER(this, &UserMessages::OnSendUserMessage_Pre), false);
 		SH_REMOVE_HOOK(IVEngineServer, SendUserMessage, engine, SH_MEMBER(this, &UserMessages::OnSendUserMessage_Post), true);
 #else
@@ -515,7 +510,7 @@ void UserMessages::_DecRefCounter()
 	}
 }
 
-#if SOURCE_ENGINE == SE_CSGO || SOURCE_ENGINE == SE_BLADE || SOURCE_ENGINE == SE_MCV
+#if SOURCE_ENGINE == SE_BLADE || SOURCE_ENGINE == SE_MCV
 void UserMessages::OnSendUserMessage_Pre(IRecipientFilter &filter, int msg_type, const protobuf::Message &msg)
 {
 #if SOURCE_ENGINE == SE_CSGO
@@ -572,7 +567,7 @@ void UserMessages::OnSendUserMessage_Post(IRecipientFilter &filter, int msg_type
 	RETURN_META(res)
 #endif
 
-#if SOURCE_ENGINE == SE_CSGO || SOURCE_ENGINE == SE_BLADE || SOURCE_ENGINE == SE_MCV
+#if SOURCE_ENGINE == SE_BLADE || SOURCE_ENGINE == SE_MCV
 protobuf::Message *UserMessages::OnStartMessage_Pre(IRecipientFilter *filter, int msg_type, const char *msg_name)
 #elif SOURCE_ENGINE >= SE_LEFT4DEAD
 bf_write *UserMessages::OnStartMessage_Pre(IRecipientFilter *filter, int msg_type, const char *msg_name)
@@ -612,7 +607,7 @@ bf_write *UserMessages::OnStartMessage_Pre(IRecipientFilter *filter, int msg_typ
 	UM_RETURN_META_VALUE(MRES_IGNORED, NULL);
 }
 
-#if SOURCE_ENGINE == SE_CSGO || SOURCE_ENGINE == SE_BLADE || SOURCE_ENGINE == SE_MCV
+#if SOURCE_ENGINE == SE_BLADE || SOURCE_ENGINE == SE_MCV
 protobuf::Message *UserMessages::OnStartMessage_Post(IRecipientFilter *filter, int msg_type, const char *msg_name)
 #elif SOURCE_ENGINE >= SE_LEFT4DEAD
 bf_write *UserMessages::OnStartMessage_Post(IRecipientFilter *filter, int msg_type, const char *msg_name)
@@ -777,7 +772,7 @@ void UserMessages::OnMessageEnd_Pre()
 
 	if (!handled && intercepted)
 	{
-#if SOURCE_ENGINE == SE_CSGO || SOURCE_ENGINE == SE_BLADE || SOURCE_ENGINE == SE_MCV
+#if SOURCE_ENGINE == SE_BLADE || SOURCE_ENGINE == SE_MCV
 		ENGINE_CALL(SendUserMessage)(static_cast<IRecipientFilter &>(*m_CurRecFilter), m_CurId, *m_InterceptBuffer);
 #else
 		bf_write *engine_bfw;
@@ -789,11 +784,11 @@ void UserMessages::OnMessageEnd_Pre()
 		m_ReadBuffer.StartReading(m_InterceptBuffer.GetBasePointer(), m_InterceptBuffer.GetNumBytesWritten());
 		engine_bfw->WriteBitsFromBuffer(&m_ReadBuffer, m_InterceptBuffer.GetNumBitsWritten());
 		ENGINE_CALL(MessageEnd)();
-#endif // SE_CSGO || SE_BLADE || SE_MCV
+#endif // SE_BLADE || SE_MCV
 	}
 
 	{
-#if SOURCE_ENGINE == SE_CSGO || SOURCE_ENGINE == SE_BLADE || SOURCE_ENGINE == SE_MCV
+#if SOURCE_ENGINE == SE_BLADE || SOURCE_ENGINE == SE_MCV
 		int size = m_OrigBuffer->ByteSize();
 		uint8 *data = (uint8 *)stackalloc(size);
 		m_OrigBuffer->SerializePartialToArray(data, size);
@@ -823,7 +818,7 @@ void UserMessages::OnMessageEnd_Pre()
 			iter++;
 		}
 
-#if SOURCE_ENGINE == SE_CSGO || SOURCE_ENGINE == SE_BLADE || SOURCE_ENGINE == SE_MCV
+#if SOURCE_ENGINE == SE_BLADE || SOURCE_ENGINE == SE_MCV
 		delete pTempMsg;
 #endif
 	}
